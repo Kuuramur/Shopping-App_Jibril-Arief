@@ -1,3 +1,4 @@
+// Import necessary packages and dependencies for the e-commerce application.
 import 'package:e_commerce/providers/service_providers.dart';
 import 'package:e_commerce/screens/favorite_screen.dart';
 import 'package:e_commerce/screens/product_detail_screen.dart';
@@ -5,6 +6,7 @@ import 'package:e_commerce/screens/shopping_cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// Define a stateful widget for the home screen of the e-commerce app.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -13,10 +15,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // Create an instance of ServiceProviders for managing data and state.
   ServiceProviders serviceProviders = ServiceProviders();
 
   @override
   void initState() {
+    // Fetch initial product and user data when the screen initializes.
     Provider.of<ServiceProviders>(context, listen: false).fetchProduct();
     Provider.of<ServiceProviders>(context, listen: false).fetchUser();
     super.initState();
@@ -24,10 +28,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Build the user interface for the home screen.
     return Scaffold(
       appBar: AppBar(
         title: const Text("List Product"),
         actions: [
+          // Add a refresh button to reload products.
           IconButton(
             onPressed: () {
               Provider.of<ServiceProviders>(context, listen: false)
@@ -38,11 +44,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: RefreshIndicator(
+        // Allow pull-to-refresh functionality for reloading products.
         onRefresh: () => Provider.of<ServiceProviders>(context, listen: false)
             .fetchProduct(),
         child: Consumer<ServiceProviders>(
           builder: (context, value, child) {
-            // handle error
+            // Handle any error messages that occur during data fetching.
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (value.errorMessage != null) {
                 showDialog(
@@ -54,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       actions: [
                         TextButton(
                           onPressed: () {
+                            // Clear error message and close the dialog.
                             serviceProviders.clearErrorMessage();
                             Navigator.of(context).pop();
                           },
@@ -66,12 +74,15 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             });
 
+            // Display a loading indicator while data is being fetched.
             if (value.isLoading) {
               return const Center(child: CircularProgressIndicator());
             }
 
+            // Display the main content of the screen.
             return Column(
               children: [
+                // Greet the user if user data is available.
                 if (value.user != null)
                   Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -80,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: const TextStyle(fontSize: 24),
                     ),
                   ),
+                // Dropdown menu for selecting product categories.
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: DropdownButton<String>(
@@ -104,6 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     }).toList(),
                   ),
                 ),
+                // Display products in a grid view.
                 Expanded(
                   child: GridView.count(
                     crossAxisCount: 2,
@@ -115,6 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         final imageUrl = product.images![0].toString();
                         return GestureDetector(
                           onTap: () {
+                            // Navigate to product detail screen on tap.
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -139,6 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderRadius: BorderRadius.circular(8),
                               child: Stack(
                                 children: [
+                                  // Display product image.
                                   Positioned.fill(
                                     child: Image.network(
                                       imageUrl,
@@ -149,6 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       },
                                     ),
                                   ),
+                                  // Favorite icon for adding/removing favorites.
                                   Positioned(
                                     top: 8,
                                     right: 8,
@@ -169,6 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       },
                                     ),
                                   ),
+                                  // Product title and price overlay.
                                   Positioned(
                                     bottom: 0,
                                     left: 0,
@@ -215,6 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
+      // Bottom navigation bar with home and favorites tabs.
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -229,6 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
         currentIndex: 0,
         onTap: (index) {
           if (index == 1) {
+            // Navigate to favorites screen when the favorites tab is tapped.
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FavoritesScreen()),
@@ -236,6 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         },
       ),
+      // Floating action button for navigating to the shopping cart screen.
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -255,6 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
               bottom: 0,
               child: Consumer<ServiceProviders>(
                 builder: (context, value, child) {
+                  // Display the number of items in the shopping cart.
                   return CircleAvatar(
                     radius: 8,
                     backgroundColor: Colors.red,

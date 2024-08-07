@@ -15,12 +15,14 @@ class ShoppingCartScreen extends StatefulWidget {
 }
 
 class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
+  // Memperbarui lokasi saat ini menggunakan Geolocator
   Future<void> _updateCurrentLocation() async {
     final serviceProvider =
         Provider.of<ServiceProviders>(context, listen: false);
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
+    // Mendapatkan nama lokasi dari koordinat dan menyimpannya ke penyedia layanan
     String location = await serviceProvider.getLocationName(
         position.latitude, position.longitude);
     serviceProvider.setDeliveryLocation(location);
@@ -29,7 +31,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
   @override
   void initState() {
     super.initState();
-    // Update location on initial load
+    // Memperbarui lokasi saat inisialisasi
     _updateCurrentLocation();
   }
 
@@ -47,12 +49,15 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
       ),
       body: Consumer<ServiceProviders>(
         builder: (context, serviceProvider, child) {
+          // Mendapatkan item keranjang dari penyedia layanan
           final cartItems = serviceProvider.cartItems;
 
+          // Menampilkan pesan jika keranjang kosong
           if (cartItems.isEmpty) {
             return const Center(child: Text('Your cart is empty'));
           }
 
+          // Menghitung total pesanan dan pembayaran
           double totalOrder = cartItems.fold(
               0, (sum, item) => sum + (item.product.price! * item.quantity));
           const double serviceFee = 2.0;
@@ -66,6 +71,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                   itemBuilder: (context, index) {
                     final item = cartItems[index];
                     return ListTile(
+                      // Menampilkan gambar produk menggunakan CachedNetworkImage
                       leading: CachedNetworkImage(
                         imageUrl: item.product.images![0],
                         placeholder: (context, url) =>
@@ -73,6 +79,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                         errorWidget: (context, url, error) =>
                             const Icon(Icons.error),
                       ),
+                      // Menampilkan judul dan kuantitas produk
                       title: Text(item.product.title ?? 'No title'),
                       subtitle: Text(
                           'Quantity: ${item.quantity} \nPrice: \$${item.product.price}'),
@@ -82,6 +89,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                           IconButton(
                             icon: const Icon(Icons.remove),
                             onPressed: () {
+                              // Mengurangi kuantitas item di keranjang
                               serviceProvider.updateCartItemQuantity(
                                   item.product, item.quantity - 1);
                             },
@@ -89,6 +97,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                           IconButton(
                             icon: const Icon(Icons.add),
                             onPressed: () {
+                              // Menambah kuantitas item di keranjang
                               serviceProvider.updateCartItemQuantity(
                                   item.product, item.quantity + 1);
                             },
@@ -113,6 +122,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Menampilkan ringkasan pesanan dan lokasi pengiriman
                           Text(
                               'Total Order: \$${totalOrder.toStringAsFixed(2)}'),
                           const SizedBox(height: 4.0),
@@ -134,6 +144,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                                 ),
                               ElevatedButton(
                                 onPressed: () async {
+                                  // Membuka layar lokasi untuk mengedit lokasi pengiriman
                                   final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -141,6 +152,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                                             const LocationScreen()),
                                   );
 
+                                  // Memperbarui lokasi pengiriman jika ada hasil dari layar lokasi
                                   if (result != null) {
                                     String city = result['city'];
                                     String? note = result['note'];
@@ -162,9 +174,11 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                     const SizedBox(height: 8.0),
                     ElevatedButton(
                       onPressed: () {
+                        // Mengenerate ID transaksi menggunakan UUID
                         final transactionId = const Uuid().v4();
                         final user = serviceProvider.user;
                         final dateTime = DateTime.now();
+                        // Membuka halaman konfirmasi pembayaran
                         Navigator.push(
                           context,
                           MaterialPageRoute(

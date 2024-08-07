@@ -25,16 +25,12 @@ void main() async {
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
-      // Izin lokasi ditolak, Anda bisa meminta pengguna untuk memberikan izin
-      // Misalnya: return; atau handle sesuai kebutuhan
       print('Location permissions are denied');
       return;
     }
   }
 
   if (permission == LocationPermission.deniedForever) {
-    // Izin lokasi ditolak selamanya, Anda bisa meminta pengguna untuk memberikan izin melalui pengaturan
-    // Misalnya: return; atau handle sesuai kebutuhan
     print('Location permissions are permanently denied');
     return;
   }
