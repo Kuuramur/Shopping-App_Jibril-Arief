@@ -4,7 +4,7 @@ Flutter Shopping APP
 
 Using Fake API for data products and user account
 
-will update and optimize the UI and component ASAP
+will update and optimize the UI and Component ASAP
 
 ## Getting Started
 
