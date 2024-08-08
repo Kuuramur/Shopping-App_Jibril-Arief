@@ -1,18 +1,18 @@
-// Import paket dan library yang diperlukan
+// Import necessary packages and libraries
 import 'package:e_commerce/providers/service_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Import provider
 
-// Widget Stateless untuk menampilkan halaman konfirmasi pembayaran
+// Stateless widget to display the payment confirmation page
 class ConfirmationPage extends StatelessWidget {
-  // Properti yang dibutuhkan untuk menampilkan informasi transaksi
+  // Properties needed to display transaction information
   final String transactionId;
   final String userName;
   final String userEmail;
   final double totalPayment;
   final DateTime transactionDate;
 
-  // Konstruktor untuk menginisialisasi properti yang dibutuhkan
+  // Constructor to initialize required properties
   const ConfirmationPage({
     super.key,
     required this.transactionId,
@@ -25,41 +25,41 @@ class ConfirmationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Scaffold untuk membuat struktur dasar halaman
+      // Scaffold to create the basic structure of the page
       appBar: AppBar(
-        // Menampilkan judul pada AppBar
+        // Display title on the AppBar
         title: const Text('Payment Confirmation'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        // Menampilkan informasi transaksi dalam kolom
+        // Display transaction information in a column
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Menampilkan ID transaksi
+            // Display transaction ID
             Text('Transaction ID: $transactionId',
                 style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 10),
-            // Menampilkan nama pengguna
+            // Display user name
             Text('Name: $userName', style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 10),
-            // Menampilkan email pengguna
+            // Display user email
             Text('Email: $userEmail', style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 10),
-            // Menampilkan total pembayaran
+            // Display total payment
             Text('Total Payment: \$${totalPayment.toStringAsFixed(2)}',
                 style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 10),
-            // Menampilkan tanggal transaksi
+            // Display transaction date
             Text('Date: ${transactionDate.toLocal().toString().split(' ')[0]}',
                 style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 10),
-            // Menampilkan waktu transaksi
+            // Display transaction time
             Text(
                 'Time: ${transactionDate.toLocal().toString().split(' ')[1].split('.')[0]}',
                 style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 20),
-            // Menampilkan pesan konfirmasi bahwa pembayaran berhasil
+            // Display confirmation message indicating successful payment
             const Text(
               'Successful Payment',
               style: TextStyle(
@@ -69,13 +69,13 @@ class ConfirmationPage extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             Center(
-              // Tombol untuk kembali ke halaman utama
+              // Button to return to the home page
               child: ElevatedButton(
                 onPressed: () {
-                  // Mengakses instance ServiceProviders dan meresetnya
+                  // Access the instance of ServiceProviders and reset it
                   Provider.of<ServiceProviders>(context, listen: false).reset();
 
-                  // Menavigasi kembali ke halaman utama
+                  // Navigate back to the home page
                   Navigator.popUntil(context, (route) => route.isFirst);
                 },
                 child: const Text('Back to Home'),

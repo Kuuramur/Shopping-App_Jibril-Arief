@@ -13,18 +13,18 @@ class LocationScreen extends StatefulWidget {
 }
 
 class _LocationScreenState extends State<LocationScreen> {
-  // Variabel untuk menyimpan nama kota berdasarkan koordinat lokasi
+  // Variable to store the city name based on location coordinates
   String city = '';
-  // Variabel untuk menyimpan nilai lintang dan bujur
+  // Variables to store latitude and longitude values
   double lat = 0.0;
   double lng = 0.0;
-  // Variabel untuk menyimpan catatan lokasi
+  // Variable to store location notes
   String note = '';
 
-  // Kontroler untuk mengatur peta
+  // Controller to manage the map
   late final MapController _mapController = MapController();
 
-  // Membuat marker pada lokasi yang ditentukan
+  // Function to build a marker at the specified location
   Marker buildMarker(LatLng coordinates) {
     return Marker(
       point: LatLng(coordinates.latitude, coordinates.longitude),
@@ -36,7 +36,7 @@ class _LocationScreenState extends State<LocationScreen> {
     );
   }
 
-  // Mendapatkan lokasi saat ini menggunakan Geolocator
+  // Function to get the current location using Geolocator
   Future<void> _getCurrentLocation() async {
     var position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.best,
@@ -45,13 +45,13 @@ class _LocationScreenState extends State<LocationScreen> {
       lat = position.latitude;
       lng = position.longitude;
     });
-    // Mendapatkan nama kota berdasarkan koordinat
+    // Get the city name based on coordinates
     _getCityFromCoordinates(lat, lng);
-    // Memindahkan peta ke lokasi saat ini
+    // Move the map to the current location
     _mapController.move(LatLng(lat, lng), 16.0);
   }
 
-  // Mendapatkan nama kota dari koordinat menggunakan Geocoding
+  // Function to get city name from coordinates using Geocoding
   Future<void> _getCityFromCoordinates(double lat, double lng) async {
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
@@ -67,7 +67,7 @@ class _LocationScreenState extends State<LocationScreen> {
   @override
   void initState() {
     super.initState();
-    // Mendapatkan lokasi saat ini saat inisialisasi
+    // Get the current location during initialization
     _getCurrentLocation();
   }
 
@@ -90,7 +90,7 @@ class _LocationScreenState extends State<LocationScreen> {
                         WidgetStateProperty.all(Colors.grey.shade200),
                   ),
                   onPressed: () async {
-                    // Menggunakan lokasi saat ini
+                    // Use the current location
                     await _getCurrentLocation();
                   },
                   icon: const Icon(
@@ -108,7 +108,7 @@ class _LocationScreenState extends State<LocationScreen> {
                   ),
                   onPressed: () {
                     setState(() {
-                      // Aktifkan interaksi peta
+                      // Enable map interaction
                     });
                   },
                   icon: const Icon(
@@ -125,7 +125,7 @@ class _LocationScreenState extends State<LocationScreen> {
             ],
           ),
           const SizedBox(height: 10),
-          // Menampilkan nama kota jika tersedia
+          // Display the city name if available
           if (city.isNotEmpty)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -146,7 +146,7 @@ class _LocationScreenState extends State<LocationScreen> {
               ],
             ),
           const SizedBox(height: 10),
-          // Input untuk catatan lokasi
+          // Input for location notes
           TextField(
             decoration: const InputDecoration(
               labelText: 'Location Note',
@@ -159,7 +159,7 @@ class _LocationScreenState extends State<LocationScreen> {
             },
           ),
           const SizedBox(height: 10),
-          // Peta untuk memilih lokasi
+          // Map for selecting a location
           Container(
             height: 400,
             decoration: BoxDecoration(
@@ -175,7 +175,7 @@ class _LocationScreenState extends State<LocationScreen> {
                   initialZoom: 16.0,
                   onTap: (tapPosition, point) {
                     setState(() {
-                      // Mengupdate lokasi berdasarkan titik yang dipilih di peta
+                      // Update location based on the selected point on the map
                       lat = point.latitude;
                       lng = point.longitude;
                       _getCityFromCoordinates(lat, lng);
@@ -183,12 +183,12 @@ class _LocationScreenState extends State<LocationScreen> {
                   },
                 ),
                 children: [
-                  // Menampilkan peta menggunakan OpenStreetMap
+                  // Display map using OpenStreetMap
                   TileLayer(
                     urlTemplate:
                         "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                   ),
-                  // Menampilkan marker pada lokasi yang dipilih
+                  // Display a marker at the selected location
                   MarkerLayer(
                     markers: [
                       buildMarker(LatLng(lat, lng)),
@@ -199,7 +199,7 @@ class _LocationScreenState extends State<LocationScreen> {
             ),
           ),
           const SizedBox(height: 40),
-          // Tombol untuk mengirim lokasi
+          // Button to submit the location
           Center(
             child: ElevatedButton(
               onPressed: () {

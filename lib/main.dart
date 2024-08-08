@@ -13,9 +13,6 @@ void main() async {
 
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
-    // Layanan lokasi tidak diaktifkan, minta pengguna untuk mengaktifkannya
-    // Anda bisa menampilkan dialog atau pesan di sini
-    // Misalnya: return; atau handle sesuai kebutuhan
     print('Location services are disabled.');
     return;
   }

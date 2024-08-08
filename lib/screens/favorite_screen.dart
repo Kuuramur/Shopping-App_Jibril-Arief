@@ -1,40 +1,40 @@
-// Import paket dan library yang diperlukan
+// Import necessary packages and libraries
 import 'package:e_commerce/providers/service_providers.dart';
 import 'package:e_commerce/screens/product_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// Widget Stateless untuk menampilkan daftar produk favorit
+// Stateless widget to display the list of favorite products
 class FavoritesScreen extends StatelessWidget {
-  // Konstruktor default
+  // Default constructor
   const FavoritesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Scaffold untuk membuat struktur dasar halaman
+      // Scaffold to create the basic structure of the page
       appBar: AppBar(
-        // AppBar dengan judul halaman
+        // AppBar with page title
         title: const Text('Favorites'),
       ),
-      // Menggunakan Consumer untuk mendapatkan data dari provider ServiceProviders
+      // Use Consumer to get data from the ServiceProviders provider
       body: Consumer<ServiceProviders>(
         builder: (context, value, child) {
-          // Menggunakan ListView.builder untuk menampilkan daftar produk favorit
+          // Use ListView.builder to display the list of favorite products
           return ListView.builder(
-            // Menentukan jumlah item yang akan ditampilkan dalam daftar
+            // Specify the number of items to display in the list
             itemCount: value.favoriteItems.length,
-            // Builder untuk setiap item dalam daftar
+            // Builder for each item in the list
             itemBuilder: (context, index) {
-              // Mendapatkan produk dari daftar favorit berdasarkan index
+              // Get the product from the favorites list based on index
               final product = value.favoriteItems[index];
-              // Mendapatkan URL gambar produk
+              // Get the product image URL
               final imageUrl = product.images![0].toString();
 
               return GestureDetector(
-                // Event handler saat item dalam daftar di-tap
+                // Event handler when an item in the list is tapped
                 onTap: () {
-                  // Menavigasi ke ProductDetailScreen saat item di-klik
+                  // Navigate to ProductDetailScreen when an item is clicked
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -43,29 +43,29 @@ class FavoritesScreen extends StatelessWidget {
                     ),
                   );
                 },
-                // Menampilkan informasi produk dalam ListTile
+                // Display product information in ListTile
                 child: ListTile(
-                  // Menampilkan gambar produk
+                  // Display product image
                   leading: Image.network(
                     imageUrl,
                     fit: BoxFit.cover,
                     width: 50,
                     height: 50,
-                    // Menangani error jika gambar gagal dimuat
+                    // Handle error if image fails to load
                     errorBuilder: (context, error, stackTrace) {
                       return const Icon(Icons.error);
                     },
                   ),
-                  // Menampilkan judul produk
+                  // Display product title
                   title: Text(product.title!),
-                  // Menampilkan harga produk
+                  // Display product price
                   subtitle: Text('\$${product.price!}'),
-                  // Tombol untuk menghapus produk dari daftar favorit
+                  // Button to remove product from favorites
                   trailing: IconButton(
                     icon: const Icon(Icons.remove_circle_outline),
                     color: Colors.red,
                     onPressed: () {
-                      // Menghapus item dari daftar favorit menggunakan ServiceProviders
+                      // Remove item from favorites using ServiceProviders
                       Provider.of<ServiceProviders>(context, listen: false)
                           .toggleFavorite(product.id!);
                     },
