@@ -47,7 +47,6 @@ class ServiceProviders extends ChangeNotifier {
   void reset() {
     _cartItems.clear();
     _selectedCategory = null;
-    _user = null;
     _deliveryLocation = null;
     _deliveryLocationNote = null;
     notifyListeners();
